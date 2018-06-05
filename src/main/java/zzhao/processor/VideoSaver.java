@@ -27,7 +27,7 @@ public class VideoSaver implements StreamProcessHandler {
 
     private static Logger log = LoggerFactory.getLogger(VideoSaver.class);
 
-    private FLVWriter3 writer;
+    private FLVWriter writer;
 
     private int start;
     private int length;
@@ -58,7 +58,7 @@ public class VideoSaver implements StreamProcessHandler {
 
     public void init() {
         try {
-            writer = new FLVWriter3("e:/test.flv");
+            writer = new FLVWriter("e:/test.flv");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

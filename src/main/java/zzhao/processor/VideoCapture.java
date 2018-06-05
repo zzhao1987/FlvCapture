@@ -16,7 +16,7 @@ import javax.imageio.ImageIO;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.jcodec.codecs.h264.H264Decoder;
 import org.jcodec.common.model.ColorSpace;
-import org.jcodec.common.model.Picture8Bit;
+import org.jcodec.common.model.Picture;
 import org.red5.codec.VideoCodec;
 import org.red5.server.api.event.IEvent;
 import org.red5.server.net.rtmp.RTMPType;
@@ -41,6 +41,8 @@ public class VideoCapture implements StreamProcessHandler {
     private static Logger log = LoggerFactory.getLogger(VideoSaver.class);
 
     private static int AVC_PAYLOAD_OFFSET = 5;
+    
+    private static String folder = "e:/videoCapture";
 
     private int start;
     private int length;
@@ -75,6 +77,12 @@ public class VideoCapture implements StreamProcessHandler {
     }
 
     private void initDecoder(VideoData video) {
+    	
+    	File dir = new File(folder);
+    	if(!dir.exists()){
+    		dir.mkdir();
+    	}
+    	
         IoBuffer data = video.getData().asReadOnlyBuffer();
         int bodySIze = data.limit();
         byte avcType = data.get(1);
@@ -122,17 +130,16 @@ public class VideoCapture implements StreamProcessHandler {
                 ByteBuffer avcPayload = ByteBuffer.wrap(tmp);
                 avcPayload.position(0);
 
-                byte[][] picData = Picture8Bit.create(480, 288, ColorSpace.YUV420J).getData();
+                byte[][] picData = Picture.create(480, 288, ColorSpace.YUV420J).getData();
                 List<ByteBuffer> nalUnits = extractNALUnits(avcPayload);
 
-                Picture8Bit pic = decoder.decodeFrame8BitFromNals(nalUnits, picData);
-                ImageIO.write(AWTUtil.toBufferedImage8Bit(pic), "jpg", new File("e:/test_" + video.getTimestamp() + ".jpeg"));
+                Picture pic = decoder.decodeFrameFromNals(nalUnits, picData);
+                ImageIO.write(AWTUtil.toBufferedImage(pic), "jpg", new File(folder + "/capture_" + video.getTimestamp() + ".jpeg"));
             }
         }
     }
 
     public void init() {
-        // TODO Auto-generated method stub
         decoder = new H264Decoder();
     }
 

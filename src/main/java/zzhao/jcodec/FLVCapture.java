@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.jcodec.codecs.h264.H264Decoder;
 import org.jcodec.common.model.ColorSpace;
-import org.jcodec.common.model.Picture8Bit;
+import org.jcodec.common.model.Picture;
 import org.red5.io.ITag;
 import org.red5.io.flv.impl.FLVReader;
 
@@ -75,10 +75,10 @@ public class FLVCapture {
                             // for avc frames
                             ByteBuffer avcPayload = ByteBuffer.wrap(tmp);
                             avcPayload.position(0);
-                            byte[][] picData = Picture8Bit.create(480, 288, ColorSpace.YUV420J).getData();
+                            byte[][] picData = Picture.create(480, 288, ColorSpace.YUV420J).getData();
                             List<ByteBuffer> nalUnits = extractNALUnits(avcPayload);
-                            Picture8Bit pic = decoder.decodeFrame8BitFromNals(nalUnits, picData);
-                            ImageIO.write(AWTUtil.toBufferedImage8Bit(pic), "jpg", new File("e:/test_" + count + ".jpeg"));
+                            Picture pic = decoder.decodeFrameFromNals(nalUnits, picData);
+                            ImageIO.write(AWTUtil.toBufferedImage(pic), "jpg", new File("e:/test_" + count + ".jpeg"));
                             count++;
                         }
                     }
