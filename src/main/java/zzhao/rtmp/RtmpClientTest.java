@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import zzhao.processor.StreamProcessHandler;
 import zzhao.processor.VideoCapture;
+import zzhao.processor.VideoSaver;
 
 /**
  *
@@ -39,6 +40,7 @@ public class RtmpClientTest {
 
     private static String sourceStreamName = "hks";
     private static String host = "live.hkstv.hk.lxdns.com";
+    		//"live.hkstv.hk.lxdns.com";
     private static String application = "live";
     private static int port = 1935;
 
@@ -52,7 +54,7 @@ public class RtmpClientTest {
     private static StreamProcessHandler handler;
 
     public static void main(String[] args) throws IOException {
-        handler = new VideoCapture(start, length);
+        handler = new VideoSaver(start, length);
         handler.init();
                         
         client = new RTMPClient();
